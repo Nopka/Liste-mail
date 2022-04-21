@@ -1,0 +1,17 @@
+{
+    "titre-app": "Mailing-list",
+    "menu": {
+        "aide": "Help",
+        "a-propos": "About"
+    },
+    "recherche": {
+        "barre": "Search",
+        "boutton": "Search"
+    },
+    "grille-resultat": {
+        "prenom": "First name",
+        "nom": "Last name",
+        "nickname": "Nickname",
+        "email": "Email"
+    }
+}

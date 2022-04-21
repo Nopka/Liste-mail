@@ -116,3 +116,7 @@
   padding-bottom: var(--lumo-space-xs);
   padding-top: var(--lumo-space-xs);
 }
+.univ-icon {
+  width: 2.5em;
+  padding-right: 10px;
+}

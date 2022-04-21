@@ -1,0 +1,17 @@
+{
+    "titre-app": "Liste-mail",
+    "menu": {
+        "aide": "Aide",
+        "a-propos": "A-propos"
+    },
+    "recherche": {
+        "barre": "Recherche",
+        "boutton": "Rechercher"
+    },
+    "grille-resultat": {
+        "prenom": "Prénom",
+        "nom": "Nom",
+        "nickname": "Surnom",
+        "email": "Email"
+    }
+}
