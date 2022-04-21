@@ -6,7 +6,8 @@
     },
     "recherche": {
         "barre": "Search",
-        "boutton": "Search"
+        "copier": "Copy",
+        "exporter": "Export"
     },
     "grille-resultat": {
         "prenom": "First name",
