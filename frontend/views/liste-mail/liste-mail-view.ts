@@ -35,7 +35,11 @@ class Personne { // Temporaire (uniquement la pour avoir des données statiques)
     this.nom = n;
     this.nickname = ni;
     this.email = e;
-    this.appelation = p+' ('+ni+') '+n;
+    if (ni) {
+      this.appelation = p+' ('+ni+') '+n;
+    } else {
+      this.appelation = p+' '+n
+    }
   }
 }
 
@@ -49,6 +53,7 @@ export class ListeMailView extends View {
   person3 = new Personne("Personne","De test","Personne.Detest@mail.com");
 
   persons: Personne[] = [this.person1,this.person2,this.person3];
+  
   connectedCallback() {
     super.connectedCallback();
     this.classList.add(
@@ -78,7 +83,7 @@ export class ListeMailView extends View {
   private items: readonly Personne[] = [];
   
   @state()
-  private selectedPersons: readonly Personne[] = [];
+  private selectedPersons: Personne[] = [];
   
   
   render() {
@@ -100,7 +105,7 @@ export class ListeMailView extends View {
     // `;
     return html `
       <vaadin-vertical-layout theme="spacing">
-        <div class="toolbar flex gap-s w-full">
+        <div class="toolbar flex gap-s w-full items-end">
           <vaadin-combo-box 
             label="${this.recherche_barre}" 
             .items="${this.persons}" 
@@ -112,13 +117,15 @@ export class ListeMailView extends View {
           </vaadin-combo-box>
           <vaadin-button 
             theme="primary" 
-            class="my-auto"
+            class="content-end"
+            @click="${() => this.copyToClipboard(this.selectedPersons)}"
           >
             ${this.recherche_copier}
           </vaadin-button>
+
           <vaadin-button 
             theme="primary"
-            class="my-auto"
+            class=""
           >
             ${this.recherche_exporter}
           </vaadin-button>
@@ -132,12 +139,9 @@ export class ListeMailView extends View {
             <span theme="badge pill contrast">
               <span>${Person.email}</span>
               <vaadin-button
-                aria-label="Clear filter: ${Person.email}"
-                data-email="${Person.email}"
                 theme="contrast tertiary-inline"
-                title="Clear filter: ${Person.email}"
                 style="margin-inline-start: var(--lumo-space-xs)"
-                @click="${this.deletePerson}"
+                @click="${() => this.deletePerson(Person)}"
               >
                 <vaadin-icon icon="vaadin:close-small"></vaadin-icon>
               </vaadin-button>
@@ -156,36 +160,35 @@ export class ListeMailView extends View {
     }
     if (!this.selectedPersons.includes(selectedItem as Personne)) {
       this.selectedPersons = [...this.selectedPersons, selectedItem as Personne];
+      // console.log(selectedItem);
     }
     
   }
   
-  private deletePerson({ target }: Event) {
-    const { email } = (target as Button).dataset;
-
-    if (email) {
-      this.selectedPersons = this.selectedPersons.filter((p) => p.email !== p.email);
+  private deletePerson(person:Personne) {
+    if (person) {
+      this.selectedPersons = this.selectedPersons.filter((p) => p !== person);
     }
   }
 
-
-  firstSelectionEvent = true;
-  handleGridSelection(e: CustomEvent) {
-    if (this.firstSelectionEvent) {
-      this.firstSelectionEvent = false;
-      return;
-    }
-    // listeMailStore.setSelectedContact(e.detail.value);
-  }
-  copyToClipboard(aCopier: string){
+  private copyToClipboard(tabToCopy: Personne[]){
+    const aCopier = this.changePersonTabToMailTab(tabToCopy);
     const textarea = document.createElement("textarea");
-    textarea.value = aCopier;
+    textarea.value = aCopier.toString();
     textarea.style.position = "absolute";
     textarea.style.opacity = "0";
     document.body.appendChild(textarea);
     textarea.select();
     document.execCommand("copy");
     document.body.removeChild(textarea);
+  }
+
+  private changePersonTabToMailTab(tabPersons: Personne[]){
+    var tabMail:string[] = [];
+    tabPersons.forEach(person => {
+      tabMail.push(person.email);
+    });
+    return tabMail;
   }
   
 }
