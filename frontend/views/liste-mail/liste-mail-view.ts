@@ -113,11 +113,13 @@ export class ListeMailView extends View {
             item-value-path="email"
             class="w-full"
             @change="${this.selectPerson}"
+            
+            
           >
+          <!-- clear-button-visible -->
           </vaadin-combo-box>
           <vaadin-button 
-            theme="primary" 
-            class="content-end"
+            theme="primary"
             @click="${() => this.copyToClipboard(this.selectedPersons)}"
           >
             ${this.recherche_copier}
@@ -125,7 +127,7 @@ export class ListeMailView extends View {
 
           <vaadin-button 
             theme="primary"
-            class=""
+            @click="${() => this.ExportToCSV(this.selectedPersons)}"
           >
             ${this.recherche_exporter}
           </vaadin-button>
@@ -154,13 +156,14 @@ export class ListeMailView extends View {
   }
 
   private selectPerson({target}:Event){
-    const { selectedItem } = target as ComboBox;
+    var { selectedItem } = target as ComboBox;
     if (selectedItem == null) {
       return;
     }
     if (!this.selectedPersons.includes(selectedItem as Personne)) {
       this.selectedPersons = [...this.selectedPersons, selectedItem as Personne];
-      // console.log(selectedItem);
+      //vider le champ de recherche
+      (target as ComboBox).selectedItem = null;
     }
     
   }
@@ -181,6 +184,9 @@ export class ListeMailView extends View {
     textarea.select();
     document.execCommand("copy");
     document.body.removeChild(textarea);
+
+    this.notifyUser("Copié dans le pesse-papier", "success");
+
   }
 
   private changePersonTabToMailTab(tabPersons: Personne[]){
@@ -189,6 +195,44 @@ export class ListeMailView extends View {
       tabMail.push(person.email);
     });
     return tabMail;
+  }
+
+  private createCSVArray(tabPersons: Personne[]){
+    var tabCSV:string[][] = [];
+    var introLine = ['PRENOM','NICKNAME','NOM','EMAIL'];
+    tabCSV.push(introLine);
+    tabPersons.forEach(person => {
+      var temp = [person.prenom + ',' +person.nickname + ',' +person.nom + ',' +person.email];
+      tabCSV.push(temp);
+    });
+    return tabCSV;
+  }
+
+  private ExportToCSV(tabPersons:Personne[]){
+    var finalTab = this.createCSVArray(tabPersons);
+    var CsvString = "";
+    finalTab.forEach(function(RowItem, RowIndex) {
+      RowItem.forEach(function(ColItem, ColIndex) {
+        CsvString += ColItem + ',';
+      });
+      CsvString += "\r\n";
+    });
+    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+    var x = document.createElement("A");
+    x.setAttribute("href", CsvString );
+    x.setAttribute("download","ListeMail.csv");
+    document.body.appendChild(x);
+    x.click();
+
+    this.notifyUser("Exporté au format CSV", "success");
+  };
+
+
+  private notifyUser(message:string, type:string){
+    const notification = Notification.show(message,{
+      position:'middle',
+    });
+    notification.setAttribute('theme',type);
   }
   
 }
