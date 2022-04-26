@@ -43,12 +43,12 @@ class Personne { // Temporaire (uniquement la pour avoir des données statiques)
   }
 }
 
-type Person = string;
+
 
 @customElement('liste-mail-view')
 export class ListeMailView extends View {
   name = '';
-  person1 = new Personne("Hugo","Roussillon","hugo@roussillon.com","hugo"); //creation des données statiques
+  person1 = new Personne("Hugo","Roussillon","hugo@roussillon.com","hugo");
   person2 = new Personne("Matthieu","Manginot","matthieu@manginot.com","matthieu");
   person3 = new Personne("Personne","De test","Personne.Detest@mail.com");
 

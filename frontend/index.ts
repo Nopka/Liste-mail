@@ -1,8 +1,7 @@
 import { Router } from '@vaadin/router';
 import { routes } from './routes';
 import { appStore } from './stores/app-store';
-import { registerTranslateConfig } from "lit-translate";
-import { use } from "lit-translate";
+import { registerTranslateConfig, use } from "lit-translate";
 
 export const router = new Router(document.querySelector('#outlet'));
 
